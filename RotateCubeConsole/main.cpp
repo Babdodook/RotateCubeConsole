@@ -4,17 +4,18 @@
 
 int main()
 {
-	system("mode con: cols=100 lines=50");
+	//system("mode con: cols=100 lines=50");
 
+	
 	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
 	cursorInfo.dwSize = 1;
 	cursorInfo.bVisible = FALSE;
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-
+	
 	RectTransform* rect = new RectTransform();
 
 
-	rect->DrawRect();
+	//rect->DrawRect();
 	while (1)
 	{
 		rect->GetKey();
@@ -33,6 +34,7 @@ int main()
 
 	system("pause");
 	*/
+
 	delete rect;
 	rect = nullptr;
 	return 0;

@@ -11,6 +11,11 @@ Vector3D::Vector3D(float _x, float _y, float _z)
 {
 }
 
+Vector3D::Vector3D(float _x, float _y, float _z, float _w)
+	: x(_x), y(_y), z(_z), w(_w)
+{
+}
+
 Vector3D::Vector3D(Vector3D& ref)
 {
 	this->x = ref.x;

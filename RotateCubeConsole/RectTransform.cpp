@@ -4,10 +4,10 @@
 
 RectTransform::RectTransform()
 {
-	position[0].SetPosition(15, 15, 1);
-	position[1].SetPosition(35, 15, 1);
-	position[2].SetPosition(15, 35, 1);
-	position[3].SetPosition(35, 35, 1);
+	position[0].SetPosition(15, 15, 15);
+	position[1].SetPosition(35, 15, 15);
+	position[2].SetPosition(15, 35, 15);
+	position[3].SetPosition(35, 35, 15);
 
 
 	ZeroMemory(ScreenArray, sizeof(ScreenArray));
@@ -68,8 +68,8 @@ void RectTransform::GetKey()
 			{
 			case 75:
 				Rotate();
-				system("cls");
-				DrawRect();
+				//system("cls");
+				//DrawRect();
 				break;
 			}
 		}
@@ -78,7 +78,7 @@ void RectTransform::GetKey()
 
 void RectTransform::Rotate()
 {
-	int degree = 3;
+	int degree = 30;
 	Vector3D origin[4];
 
 	for (int i = 0; i < 4; i++)
@@ -87,7 +87,7 @@ void RectTransform::Rotate()
 	for (int i = 0; i < 4; i++)
 		ScreenArray[(int)position[i].y][(int)position[i].x] = 0;
 
-
+	/*
 	for (int i = 0; i < 4; i++)
 	{
 		position[i] = Viewport_Convert(position[i]);
@@ -100,18 +100,39 @@ void RectTransform::Rotate()
 
 		position[i] = Screen_Convert(origin[i]);
 	}
-
-	/*
-	for (int i = 0; i < 4; i++)
-	{
-		position[i] = Viewport_Convert(position[i]);
-
-		origin[i].x = (position[i].x * cos(degree * DEG2RAD) + sin(degree * DEG2RAD));
-		origin[i].y = position[i].y;
-
-		position[i] = Screen_Convert(origin[i]);
-	}
 	*/
+
+	
+	for (int i = 0; i < 1; i++)
+	{
+		//position[i] = Viewport_Convert(position[i]);
+		printf("%d번째\n", i);
+		printf("원점 이동 전: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
+
+		position[i].x = (int)position[i].x - 25;
+		position[i].z = (int)position[i].z - 15;
+		//position[i].z *= -1;
+		printf("원점 이동 후: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
+
+		origin[i].x = (int)(position[i].x * cos(degree * DEG2RAD) + position[i].z*sin(degree * DEG2RAD));
+		origin[i].y = (int)position[i].y;
+		origin[i].z = (int)(position[i].x * (-sin(degree * DEG2RAD) + position[i].z * cos(degree * DEG2RAD)));
+
+		printf("원점 이동 후 회전 적용\n");
+		printf("x : %d\n", (int)origin[i].x);
+		printf("z : %d\n\n", (int)origin[i].z);
+		
+		origin[i].x += 25;
+		//origin[i].z *= -1;
+		origin[i].z += 15;
+		printf("스크린 좌표로\n");
+		printf("x: %d z: %d\n\n", (int)origin[i].x, (int)origin[i].z);
+		
+		position[i] = origin[i];
+		//position[i] = Screen_Convert(origin[i]);
+		//system("pause");
+	}
+	
 
 	/*
 	for (int i = 0; i < 4; i++)
@@ -134,7 +155,6 @@ Vector3D RectTransform::Viewport_Convert(Vector3D position)
 	position.y -= 25;
 	position.y *= -1;
 
-
 	//printf("Viewport Convert\n");
 	//printf("x: %d y: %d\n", (int)position.x, (int)position.y);
 
@@ -147,9 +167,23 @@ Vector3D RectTransform::Screen_Convert(Vector3D position)
 	position.y *= -1;
 	position.y += 25;
 
-
 	//printf("Screen Convert\n");
 	//printf("x: %d y: %d\n", (int)position.x, (int)position.y);
 
 	return position;
+}
+
+void RectTransform::Translate(float px, float py, float pz)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		position[i].x += px;
+		position[i].y += py;
+		position[i].z += pz;
+	}
+}
+
+void RectTransform::Scale()
+{
+
 }
