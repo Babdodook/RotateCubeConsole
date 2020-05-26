@@ -78,7 +78,7 @@ void RectTransform::GetKey()
 
 void RectTransform::Rotate()
 {
-	int degree = 30;
+	int degree = -30;
 	Vector3D origin[4];
 
 	for (int i = 0; i < 4; i++)
@@ -110,21 +110,21 @@ void RectTransform::Rotate()
 		printf("원점 이동 전: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
 
 		position[i].x = (int)position[i].x - 25;
-		position[i].z = (int)position[i].z - 15;
-		//position[i].z *= -1;
+		position[i].z = 1;
+		position[i].z *= -1;
 		printf("원점 이동 후: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
 
-		origin[i].x = (int)(position[i].x * cos(degree * DEG2RAD) + position[i].z*sin(degree * DEG2RAD));
+		origin[i].x = (position[i].x * cos(degree * DEG2RAD) + (position[i].z*sin(degree * DEG2RAD)));
 		origin[i].y = (int)position[i].y;
-		origin[i].z = (int)(position[i].x * (-sin(degree * DEG2RAD) + position[i].z * cos(degree * DEG2RAD)));
+		origin[i].z = (int)(position[i].x * -sin(degree * DEG2RAD)) + (int)(position[i].z * cos(degree * DEG2RAD));
 
 		printf("원점 이동 후 회전 적용\n");
-		printf("x : %d\n", (int)origin[i].x);
+		printf("x : %d, %d, %d\n", (int)origin[i].x, (int)(position[i].x * cos(degree * DEG2RAD)), (position[i].z * sin(degree * DEG2RAD)));
 		printf("z : %d\n\n", (int)origin[i].z);
 		
 		origin[i].x += 25;
 		//origin[i].z *= -1;
-		origin[i].z += 15;
+		origin[i].z = 15;
 		printf("스크린 좌표로\n");
 		printf("x: %d z: %d\n\n", (int)origin[i].x, (int)origin[i].z);
 		
