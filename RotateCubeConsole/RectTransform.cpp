@@ -4,10 +4,10 @@
 
 RectTransform::RectTransform()
 {
-	position[0].SetPosition(15, 15, 15);
-	position[1].SetPosition(35, 15, 15);
-	position[2].SetPosition(15, 35, 15);
-	position[3].SetPosition(35, 35, 15);
+	position[0].SetPosition(15, 15, 10);
+	position[1].SetPosition(35, 15, 10);
+	position[2].SetPosition(15, 35, 10);
+	position[3].SetPosition(35, 35, 10);
 
 
 	ZeroMemory(ScreenArray, sizeof(ScreenArray));
@@ -36,12 +36,12 @@ void RectTransform::DrawRect()
 	ZeroMemory(ScreenArray, sizeof(ScreenArray));
 
 	for (int i = 0; i < 4; i++)
-		ScreenArray[(int)position[i].y][(int)position[i].x] = 1;
+		//[round(position[i].y)][position[i].x] = 1;
 
-	DrawLine(ScreenArray, (int)position[0].x, (int)position[0].y, (int)position[1].x, (int)position[1].y);
-	DrawLine(ScreenArray, (int)position[0].x, (int)position[0].y, (int)position[2].x, (int)position[2].y);
-	DrawLine(ScreenArray, (int)position[1].x, (int)position[1].y, (int)position[3].x, (int)position[3].y);
-	DrawLine(ScreenArray, (int)position[2].x, (int)position[2].y, (int)position[3].x, (int)position[3].y);
+	DrawLine(ScreenArray, position[0].x, position[0].y, position[1].x, position[1].y);
+	DrawLine(ScreenArray, position[0].x, position[0].y, position[2].x, position[2].y);
+	DrawLine(ScreenArray, position[1].x, position[1].y, position[3].x, position[3].y);
+	DrawLine(ScreenArray, position[2].x, position[2].y, position[3].x, position[3].y);
 
 	for (int i = 0; i < 50; i++)
 	{
@@ -76,6 +76,15 @@ void RectTransform::GetKey()
 	}
 }
 
+int castFloatToInt(float num)
+{
+	float tempnum = (int)num - num;
+	if (tempnum >= 0.5f)
+		num += 1;
+
+	return (int)num;
+}
+
 void RectTransform::Rotate()
 {
 	int degree = 30;
@@ -85,7 +94,7 @@ void RectTransform::Rotate()
 		origin[i] = position[i];
 
 	for (int i = 0; i < 4; i++)
-		ScreenArray[(int)position[i].y][(int)position[i].x] = 0;
+		ScreenArray[position[i].y][position[i].x] = 0;
 
 	/*
 	for (int i = 0; i < 4; i++)
@@ -107,26 +116,36 @@ void RectTransform::Rotate()
 	{
 		//position[i] = Viewport_Convert(position[i]);
 		printf("%d번째\n", i);
-		printf("원점 이동 전: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
+		printf("원점 이동 전: x: %d z: %d\n\n", position[i].x, position[i].z);
 
-		position[i].x = (int)position[i].x - 25;
-		position[i].z = (int)position[i].z - 15;
+		position[i].x = position[i].x - 25;
+		//position[i].z = 1;
 		//position[i].z *= -1;
 		printf("원점 이동 후: x: %d z: %d\n\n", (int)position[i].x, (int)position[i].z);
 
-		origin[i].x = (int)(position[i].x * cos(degree * DEG2RAD) + position[i].z*sin(degree * DEG2RAD));
-		origin[i].y = (int)position[i].y;
-		origin[i].z = (int)(position[i].x * (-sin(degree * DEG2RAD) + position[i].z * cos(degree * DEG2RAD)));
+		float x;
+		float y;
+		float z;
+		x = ((cos(degree * DEG2RAD))*position[i].x) + ((sin(degree * DEG2RAD))*position[i].z);
+		y = position[i].y;
+		z = ((-sin(degree * DEG2RAD))*position[i].x) + ((cos(degree * DEG2RAD))*position[i].z);
+		
+		origin[i].x = round(x);
+		origin[i].y = round(y);
+		origin[i].z = round(z);
+
+		printf("x: %f cos : %f\n", x, cos(degree * DEG2RAD));
+		printf("z: %f sin : %f\n", z, sin(degree * DEG2RAD));
 
 		printf("원점 이동 후 회전 적용\n");
-		printf("x : %d\n", (int)origin[i].x);
-		printf("z : %d\n\n", (int)origin[i].z);
+		printf("%d + %d = x : %d\n", (int)(position[i].x * cos(degree * DEG2RAD)), (int)(position[i].z * sin(degree * DEG2RAD)), origin[i].x);
+		printf("%d + %d = z : %d\n\n", (int)(position[i].x * (-sin(degree * DEG2RAD))), (int)(position[i].z * cos(degree * DEG2RAD)), origin[i].z);
 		
 		origin[i].x += 25;
 		//origin[i].z *= -1;
-		origin[i].z += 15;
+		origin[i].z = 10;
 		printf("스크린 좌표로\n");
-		printf("x: %d z: %d\n\n", (int)origin[i].x, (int)origin[i].z);
+		printf("x: %d z: %d\n\n", origin[i].x, origin[i].z);
 		
 		position[i] = origin[i];
 		//position[i] = Screen_Convert(origin[i]);
@@ -148,6 +167,8 @@ void RectTransform::Rotate()
 
 	//system("cls");
 }
+
+
 
 Vector3D RectTransform::Viewport_Convert(Vector3D position)
 {

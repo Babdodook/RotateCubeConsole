@@ -35,3 +35,12 @@ void Vector3D::SetPosition(float _x, float _y, float _z)
 	y = _y;
 	z = _z;
 }
+
+Vector3D Vector3D::operator=(const Vector3D& other)
+{
+	this->x = other.x;
+	this->y = other.y;
+	this->z = other.z;
+
+	return *this;
+}

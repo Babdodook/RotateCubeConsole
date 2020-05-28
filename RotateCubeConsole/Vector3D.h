@@ -11,6 +11,8 @@ public:
 
 	void SetPosition(float _x, float _y, float _z);
 
+	Vector3D operator=(const Vector3D& other);
+
 	float x;
 	float y;
 	float z;
